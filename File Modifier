@@ -1,0 +1,119 @@
+import java.io.*;
+import java.util.HashMap;
+import java.util.Scanner;
+
+public class Jstuff {
+    public static HashMap<Object, Object> map = new HashMap<>();
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("""
+                //            create + String -> creates a new file by the name of the string provided after
+                //            delete + String -> deletes the file by the name of the string provided
+                //            read + String -> reads the contents of the file
+                //            write + String -> will allow you to enter as many lines of words as you want and write it to the file by the name of the string provided
+                //            display -> will display all files ending with .txt
+                //            path + String -> will give you the path to your String.txt file
+                """);
+        while (true) {
+            String ans = scanner.nextLine();
+            String ex = ans.split(" ")[0];
+            switch (ex) {
+                case "create":
+                    try {
+                        String fileName = ans.split(" ")[1] + ".txt";
+                        File myObj = new File("C:\\Users\\stefa\\OneDrive\\Documents\\" + fileName + "\\");
+                        if (myObj.createNewFile()) {
+                            System.out.println("File created: " + myObj.getName());
+                        } else {
+                            System.out.println("File already exists at " + myObj.getCanonicalPath());
+                        }
+                    } catch (IOException e) {
+                        System.out.println("An error occurred.");
+                        e.printStackTrace();
+                    }
+                    break;
+                case "delete":
+                    String fileName = ans.split(" ")[1] + ".txt";
+                    File myObj = new File("C:\\Users\\stefa\\OneDrive\\Documents\\" + fileName + "\\");
+                    myObj.delete();
+                    break;
+                case "read":
+                    fileName = ans.split(" ")[1] + ".txt";
+                    myObj = new File("C:\\Users\\stefa\\OneDrive\\Documents\\" + fileName + "\\");
+                    try (BufferedReader br = new BufferedReader(new FileReader(myObj))) {
+                        System.out.println("The contents of " + fileName + ":");
+
+                        String line;
+                        while ((line = br.readLine()) != null) {
+                            System.out.println(line);
+                        }
+                    } catch (FileNotFoundException e) {
+                        System.out.println("\nThe file " + fileName + " does not exist inside the Files folder");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case "write":
+                    fileName = ans.split(" ")[1] + ".txt";
+                    myObj = new File("C:\\Users\\stefa\\OneDrive\\Documents\\" + fileName + "\\");
+                    String text = "";
+                    while (true) {
+                        String line = scanner.nextLine();
+                        if (line.contains("exit->")) break;
+                        text += line + "\n";
+                    }
+                    try {
+                        BufferedWriter writer = new BufferedWriter(new FileWriter(myObj));
+                        writer.append(text);
+                        writer.close();
+                    } catch (IOException e) {
+                        System.out.println("error");
+                    }
+                    break;
+                case "rewrite":
+                    fileName = ans.split(" ")[1] + ".txt";
+                    myObj = new File("C:\\Users\\stefa\\OneDrive\\Documents\\" + fileName + "\\");
+                    text = "";
+                    while (true) {
+                        String line = scanner.nextLine();
+                        if (line.contains("exit->")) break;
+                        text += line + "\n";
+                    }
+                    try {
+                        BufferedWriter writer = new BufferedWriter(new FileWriter(myObj));
+                        writer.write(text);
+                        writer.close();
+                    } catch (IOException e) {
+                        System.out.println("error");
+                    }
+                    break;
+                case "display":
+                    myObj = new File("C:\\Users\\stefa\\OneDrive\\Documents\\");
+                    myObj.mkdir();
+                    System.out.println("Current files:");
+                    String[] fileNames = myObj.list();
+                    for (String file : fileNames) {
+                        if (file.contains(".txt")) {
+                            System.out.println("\t" + file);
+                        }
+                    }
+                    break;
+                case "path":
+                    fileName = ans.split(" ")[1] + ".txt";
+                    myObj = new File("C:\\Users\\stefa\\OneDrive\\Documents\\" + fileName + "\\");
+                    try {
+                        System.out.println(myObj.getCanonicalPath());
+                    } catch (IOException e) {
+                        System.out.println("error");
+                    }
+                    break;
+                case "leave":
+                    return;
+            }
+
+        }
+
+
+    }
+}
